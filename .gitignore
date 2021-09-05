@@ -1,0 +1,47 @@
+# For operations-portal
+/operations-portal/node_modules
+/operations-portal/built 
+/operations-portal/.next
+
+# For nestjs-orders-app
+/nestjs-orders-app/dist
+/nestjs-orders-app/node_modules
+/nestjs-orders-app/built 
+
+# For payment-app
+/payment-app/dist
+/payment-app/node_modules
+/payment-app/built 
+
+
+# Logs
+logs
+*.log
+/nestjs-orders-appnpm-debug.log*
+/nestjs-orders-apppnpm-debug.log*
+/nestjs-orders-appyarn-debug.log*
+/nestjs-orders-appyarn-error.log*
+/nestjs-orders-applerna-debug.log*
+
+# OS
+/nestjs-orders-app.DS_Store
+
+# Tests
+/nestjs-orders-app/coverage
+/nestjs-orders-app/.nyc_output
+
+# IDEs and editors
+/.idea
+/nestjs-orders-app.project
+/nestjs-orders-app.classpath
+/nestjs-orders-app.c9/
+/nestjs-orders-app*.launch
+/nestjs-orders-app.settings/
+/nestjs-orders-app*.sublime-workspace
+
+# IDE - VSCode
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
