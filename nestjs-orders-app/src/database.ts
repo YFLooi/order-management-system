@@ -50,4 +50,12 @@ namespace Database {
   });
 }
 
+// Establish async connection with useFactory to mongodb
+export const databaseProviders = [
+  {
+    provide: 'DATABASE_CONNECTION',
+    useFactory: async (): Promise<any> => await Database.init(),
+  },
+];
+
 export default Database;

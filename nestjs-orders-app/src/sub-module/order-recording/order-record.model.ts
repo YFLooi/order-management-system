@@ -4,13 +4,19 @@ import * as mongoose from 'mongoose';
 export enum OrderStatus {
   PENDING = 'pending',
   CONFIRMED = 'confirmed',
+  CANCELLED = 'cancelled',
+  DELIVERED = 'delivered',
+}
+export enum PaymentStatus {
   DECLINED = 'declined',
+  CONFIRMED = 'confirmed',
 }
 
 export interface IOrderRecordLean {
   orderId: string;
-  description: string;
+  description?: string;
   status: OrderStatus;
+  paymentStatus?: PaymentStatus;
 }
 
 export const orderRecordSchema: Schema = new Schema(

@@ -16,6 +16,11 @@ export class AppController {
     return await this.appService.getCurrentOrders();
   }
 
+  @Post('/get-order-by-orderid')
+  async getExistingOrder(@Body() body) {
+    return await this.appService.getExistingOrder(body.orderId);
+  }
+
   @Post('/submit-order')
   async submitOrder(@Body() orderData: OrderData) {
     return await this.appService.submitOrder(orderData);

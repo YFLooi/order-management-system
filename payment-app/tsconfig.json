@@ -16,6 +16,14 @@
     "noImplicitAny": false,
     "strictBindCallApply": false,
     "forceConsistentCasingInFileNames": false,
-    "noFallthroughCasesInSwitch": false
-  }
+    "noFallthroughCasesInSwitch": false,
+    "typeRoots": ["node_modules/@types", "src/type"],
+    "paths": {
+      "*": ["node_modules/*"],
+      "@src/*": ["src/*"]
+    },
+  },
+  "typeRoots": ["src/type/*", "node_modules/@types"],
+  "include": ["./src/**/*"],
+  "exclude": ["node_modules"]
 }

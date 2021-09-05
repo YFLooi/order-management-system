@@ -18,7 +18,7 @@ export default function Landing({
   windowHeight: number;
 }) {
   const router = useRouter();
-  const [currentOrders, setCurrentOrders] = useState([]);
+  const [currentOrders, setCurrentOrders] = useState(null);
   const [orderForm, setOrderForm] = useState({
     orderType: "",
     orderId: "",
@@ -92,6 +92,11 @@ export default function Landing({
   const createOrder = async (event) => {
     event.preventDefault();
 
+    if (!currentOrders) {
+      console.log(`Unable to check currentOrders. Cannot submit`);
+      return null;
+    }
+
     console.log(
       `Creating order for following inputs:\n${JSON.stringify(
         orderForm,
@@ -99,7 +104,7 @@ export default function Landing({
         2
       )}`
     );
-    if (Object.values(orderForm).includes("")) {
+    if ([orderForm.orderId, orderForm.orderType].includes("")) {
       alert(`Missing form value. Please check`);
       return null;
     }
