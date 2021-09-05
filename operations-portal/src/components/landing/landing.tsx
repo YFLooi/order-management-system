@@ -7,6 +7,7 @@ import useStateMachine from "@cassiozen/usestatemachine";
 import axios from "axios";
 import ServerConfig from "@src/server.config";
 import moment from "moment";
+import OrdersTable from "@src/components/landing/ordersTable";
 
 export default function Landing({
   isTabletOrMobileDevice,
@@ -80,6 +81,7 @@ export default function Landing({
       .catch((err) => {
         console.log(`Unable to get current orders. Err: ${err?.message}`);
       });
+
     console.log(currentOrders);
     setCurrentOrders(currentOrders);
   };
@@ -143,56 +145,17 @@ export default function Landing({
 
   return (
     <>
-      <Container>
-        <h1>Order management system</h1>
+      <Container style={{ minHeight: "10vh" }}>
+        <h1 className="py-2">Order management system</h1>
       </Container>
-      <Container>
+      <Container style={{ minHeight: "75vh" }}>
         <Row>
           <Col xs={12} md={12} lg={6} xl={6}>
-            <div>
-              <h4>Current orders</h4>
-            </div>
-            <div>
-              {_.isEmpty(currentOrders) && (
-                <>
-                  <div>No current orders available</div>
-                </>
-              )}
-              {!_.isEmpty(currentOrders) && (
-                <>
-                  <table style={{ border: "1px solid black" }}>
-                    <thead>
-                      <tr>
-                        <th className="px-2 py-2">orderId</th>
-                        <th className="px-2 py-2">status</th>
-                        <th className="px-2 py-2">description</th>
-                        <th className="px-2 py-2">createdAt</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {currentOrders.map((order, i) => {
-                        return (
-                          <tr key={`order-table-row-${i}`}>
-                            <td className="px-2">{order?.orderId}</td>
-                            <td className="px-2">{order?.status}</td>
-                            <td className="px-2">{order?.description}</td>
-                            <td className="px-2">
-                              {moment(order?.createdAt).format(
-                                "DD/MM/YYYY HH:mm:ss"
-                              )}
-                            </td>
-                          </tr>
-                        );
-                      })}
-                    </tbody>
-                  </table>
-                </>
-              )}
-            </div>
+            <OrdersTable currentOrders={currentOrders} />
           </Col>
           <Col xs={12} md={12} lg={6} xl={6}>
             <div>
-              <h4>Order input</h4>
+              <h4 className="py-2">Order input</h4>
             </div>
             <div>
               <form
@@ -243,18 +206,25 @@ export default function Landing({
                   </Col>
                 </Row>
                 <Row className="mx-0">
-                  <input type="submit" value="Submit" />
+                  <Col xs={6} md={6} lg={6} xl={6}></Col>
+                  <Col xs={6} md={6} lg={6} xl={6}>
+                    <input type="submit" value="Submit" />
+                  </Col>
                 </Row>
               </form>
             </div>
           </Col>
         </Row>
       </Container>
-      <Container>
-        <div>
-          Send attempts: {sendFormDataState?.context?.timesSent ?? 0} vs
-          completed send attempts:{" "}
-          {sendFormDataState?.context?.timesSuccessfulSend ?? 0}
+      <Container style={{ minHeight: "15vh" }}>
+        <div className="py-3 text-right">
+          <div>
+            <b>Send attempts: {sendFormDataState?.context?.timesSent ?? 0}</b>
+          </div>
+          <div>
+            vs completed send attempts:{" "}
+            {sendFormDataState?.context?.timesSuccessfulSend ?? 0}
+          </div>
         </div>
       </Container>
     </>
