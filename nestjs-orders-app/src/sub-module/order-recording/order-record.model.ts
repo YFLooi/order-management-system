@@ -1,34 +1,30 @@
-import mongoose, { Schema, Document } from "mongoose";
-import { StatusCodes } from "http-status-codes";
+import { Schema, Document } from 'mongoose';
+import * as mongoose from 'mongoose';
 
-// export interface ICarDataLean {
-//   vehicleMake: string;
-//   vehicleModel: string;
-//   bodyType?: string;
-//   engineCC?: number;
-//   transmission: VehicleTransmission;
-//   insurerModelMap?: { [insuranceProvider: string]: any };
-// }
+export enum OrderStatus {
+  PENDING = 'pending',
+  CONFIRMED = 'confirmed',
+  DECLINED = 'declined',
+}
 
-export interface IOrderRecordLean {}
+export interface IOrderRecordLean {
+  orderId: string;
+  description: string;
+  status: OrderStatus;
+}
 
-const orderRecordSchema: Schema = new Schema({
-  vehicleMake: { type: String, required: true, index: true, minlength: 1 },
-  vehicleModel: { type: String, required: true, index: true, minlength: 1 },
-  bodyType: { type: String, minlength: 1 },
-  engineCC: { type: Number },
-  transmission: { type: String, minlength: 1 },
-  insurerModelMap: { type: Object },
-});
+export const orderRecordSchema: Schema = new Schema(
+  {
+    orderId: { type: String, required: true, index: true, minlength: 1 },
+    description: { type: String },
+    status: { type: String, enum: Object.values(OrderStatus), index: true },
+  },
+  { timestamps: true },
+);
 
 // * Index
-orderRecordSchema.index({ vehicleMake: 1, vehicleModel: 1 });
+orderRecordSchema.index({ orderId: 1, createdAt: 1 });
 
 export type IOrderRecord = IOrderRecordLean & Document;
 
-interface OrderRecordModelInterface extends mongoose.Model<IOrderRecord> {}
-
-export default mongoose.model<IOrderRecord, OrderRecordModelInterface>(
-  "orderRecord",
-  orderRecordSchema
-);
+export default mongoose.model<IOrderRecord>('orderRecord', orderRecordSchema);

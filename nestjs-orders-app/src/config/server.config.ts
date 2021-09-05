@@ -42,7 +42,7 @@ namespace ServerConfig {
     dbPassword?: string;
     dbName?: string;
   }): Readonly<string> {
-    return `mongodb+srv://${dbUserName}:${dbPassword}@sandbox.9xeet.mongodb.net/myFirstDatabase?retryWrites=true&w=majority`;
+    return `mongodb+srv://${dbUserName}:${dbPassword}@sandbox.9xeet.mongodb.net/${dbName}?retryWrites=true&w=majority`;
   }
 
   export function getPaymentAppBaseUrl(): Readonly<string> {
