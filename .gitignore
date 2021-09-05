@@ -17,27 +17,45 @@
 # Logs
 logs
 *.log
-/nestjs-orders-appnpm-debug.log*
-/nestjs-orders-apppnpm-debug.log*
-/nestjs-orders-appyarn-debug.log*
-/nestjs-orders-appyarn-error.log*
-/nestjs-orders-applerna-debug.log*
+/nestjs-orders-app/npm-debug.log*
+/nestjs-orders-appp/npm-debug.log*
+/nestjs-orders-app/yarn-debug.log*
+/nestjs-orders-app/yarn-error.log*
+/nestjs-orders-app/lerna-debug.log*
+
+/payment-app/npm-debug.log*
+/payment-appp/npm-debug.log*
+/payment-app/yarn-debug.log*
+/payment-app/yarn-error.log*
+/payment-app/lerna-debug.log*
 
 # OS
-/nestjs-orders-app.DS_Store
+/nestjs-orders-app/.DS_Store
+
+/payment-app/.DS_Store
 
 # Tests
 /nestjs-orders-app/coverage
 /nestjs-orders-app/.nyc_output
 
+/payment-app/coverage
+/payment-app/.nyc_output
+
 # IDEs and editors
 /.idea
-/nestjs-orders-app.project
-/nestjs-orders-app.classpath
-/nestjs-orders-app.c9/
-/nestjs-orders-app*.launch
-/nestjs-orders-app.settings/
-/nestjs-orders-app*.sublime-workspace
+/nestjs-orders-app/.project
+/nestjs-orders-app/.classpath
+/nestjs-orders-app/.c9/
+/nestjs-orders-app/*.launch
+/nestjs-orders-app/.settings/
+/nestjs-orders-app/*.sublime-workspace
+
+/payment-app/.project
+/payment-app/.classpath
+/payment-app/.c9/
+/payment-app/*.launch
+/payment-app/.settings/
+/payment-app/*.sublime-workspace
 
 # IDE - VSCode
 .vscode/*
