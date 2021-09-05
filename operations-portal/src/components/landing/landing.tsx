@@ -172,6 +172,7 @@ export default function Landing({
                       name="orderType"
                       defaultValue=""
                       onChange={handleOrderInput}
+                      style={{ minHeight: "2rem" }}
                     >
                       <option value="">--Select an option--</option>
                       <option value="create-order">Create order</option>
@@ -189,6 +190,7 @@ export default function Landing({
                       name="orderId"
                       placeholder="mx1234"
                       onChange={handleOrderInput}
+                      style={{ minHeight: "2rem" }}
                     />
                   </Col>
                 </Row>
@@ -202,13 +204,18 @@ export default function Landing({
                       name="orderDescription"
                       onChange={handleOrderInput}
                       placeholder="req from customer"
+                      style={{ minHeight: "2rem" }}
                     />
                   </Col>
                 </Row>
                 <Row className="mx-0">
                   <Col xs={6} md={6} lg={6} xl={6}></Col>
                   <Col xs={6} md={6} lg={6} xl={6}>
-                    <input type="submit" value="Submit" />
+                    <input
+                      className="border border-success rounded bg-success text-white px-3 py-2"
+                      type="submit"
+                      value="Submit"
+                    />
                   </Col>
                 </Row>
               </form>
