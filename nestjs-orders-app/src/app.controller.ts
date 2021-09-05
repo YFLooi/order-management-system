@@ -11,8 +11,13 @@ export class AppController {
     return this.appService.getHello();
   }
 
-  @Post('/submitOrder')
-  async changeRecord(@Body() orderData: OrderData) {
-    return await this.appService.changeRecord(orderData);
+  @Post('/get-current-orders')
+  async getCurrentOrders() {
+    return await this.appService.getCurrentOrders();
+  }
+
+  @Post('/submit-order')
+  async submitOrder(@Body() orderData: OrderData) {
+    return await this.appService.submitOrder(orderData);
   }
 }

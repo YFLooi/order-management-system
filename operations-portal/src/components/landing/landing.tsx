@@ -4,6 +4,9 @@ import Link from "next/link";
 import { useState, useEffect } from "react";
 import _ from "lodash";
 import useStateMachine from "@cassiozen/usestatemachine";
+import axios from "axios";
+import ServerConfig from "@src/server.config";
+import moment from "moment";
 
 export default function Landing({
   isTabletOrMobileDevice,
@@ -64,8 +67,21 @@ export default function Landing({
     getCurrentOrders();
   }, []);
 
-  const getCurrentOrders = () => {
+  const getCurrentOrders = async () => {
     console.log(`Getting current orders`);
+    const currentOrders = await axios
+      .post(
+        `${ServerConfig.getPaymentAppBaseUrl()}/orders/get-current-orders`,
+        orderForm
+      )
+      .then((res) => {
+        return res.data;
+      })
+      .catch((err) => {
+        console.log(`Unable to get current orders. Err: ${err?.message}`);
+      });
+    console.log(currentOrders);
+    setCurrentOrders(currentOrders);
   };
   const handleOrderInput = (event) => {
     setOrderForm((prevState) => ({
@@ -73,7 +89,7 @@ export default function Landing({
       [event.target.name]: event.target.value,
     }));
   };
-  const createOrder = (event) => {
+  const createOrder = async (event) => {
     event.preventDefault();
 
     console.log(
@@ -88,11 +104,29 @@ export default function Landing({
       return null;
     }
 
-    toggleSendFormData(`TOGGLE`);
+    // Chk for duplicate orderIds
+    const presentOrderIds = currentOrders.map((order) => order?.orderId);
+    if (presentOrderIds.includes(orderForm.orderId)) {
+      alert(`orderId "${orderForm.orderId}" already present in db`);
+      return null;
+    }
 
-    setTimeout(() => {
+    toggleSendFormData(`TOGGLE`);
+    try {
+      await axios
+        .post(
+          `${ServerConfig.getPaymentAppBaseUrl()}/orders/submit-order`,
+          orderForm
+        )
+        .then((_) => {
+          toggleSendFormData(`TOGGLE`);
+        });
+    } catch (err) {
+      console.error(
+        `Unable to pass data to /orders/submitOrder. Err: ${err?.message}`
+      );
       toggleSendFormData(`TOGGLE`);
-    }, 5000);
+    }
   };
 
   return (
@@ -113,20 +147,30 @@ export default function Landing({
           {!_.isEmpty(currentOrders) && (
             <>
               <table style={{ border: "1px solid black" }}>
-                <tr>
-                  <th>orderId</th>
-                  <th>description</th>
-                  <th>createdAt</th>
-                </tr>
-                {currentOrders.map((order) => {
-                  return (
-                    <tr>
-                      <td>{order?.orderId}</td>
-                      <td>{order?.description}</td>
-                      <td>{order?.createdAt}</td>
-                    </tr>
-                  );
-                })}
+                <thead>
+                  <tr>
+                    <th className="px-2 py-2">orderId</th>
+                    <th className="px-2 py-2">status</th>
+                    <th className="px-2 py-2">description</th>
+                    <th className="px-2 py-2">createdAt</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {currentOrders.map((order, i) => {
+                    return (
+                      <tr key={`order-table-row-${i}`}>
+                        <td className="px-2">{order?.orderId}</td>
+                        <td className="px-2">{order?.status}</td>
+                        <td className="px-2">{order?.description}</td>
+                        <td className="px-2">
+                          {moment(order?.createdAt).format(
+                            "DD/MM/YYYY HH:mm:ss"
+                          )}
+                        </td>
+                      </tr>
+                    );
+                  })}
+                </tbody>
               </table>
             </>
           )}
@@ -187,7 +231,7 @@ export default function Landing({
       <Container>
         <div>
           Send attempts: {sendFormDataState?.context?.timesSent ?? 0} vs
-          successful send attempts:{" "}
+          completed send attempts:{" "}
           {sendFormDataState?.context?.timesSuccessfulSend ?? 0}
         </div>
       </Container>

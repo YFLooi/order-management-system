@@ -15,7 +15,9 @@ try {
 
 namespace ServerConfig {
   // * Database Connection
-  const NODE_ENV = process.env.NODE_ENV ? process.env.NODE_ENV : 'local';
+  const NODE_ENV: string = process.env.NODE_ENV
+    ? process.env.NODE_ENV
+    : 'local';
   const DB_NAME = 'order-management-app';
 
   // * Check is production
