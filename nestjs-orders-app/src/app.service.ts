@@ -9,6 +9,7 @@ import { HttpService } from '@nestjs/axios';
 import { map, filter } from 'rxjs/operators';
 import ServerConfig from '@src/config/server.config';
 import axios from 'axios';
+import { sleep } from '@src/helper/utils.helper';
 
 @Injectable()
 export class AppService {
@@ -77,19 +78,15 @@ export class AppService {
           );
 
           // Move orders after x seconds to "delivered" state
-          setTimeout(async () => {
-            console.log(
-              `Timeout after payment completed. Moving order ${newOrder.orderId} to DELIVERED state`,
-            );
-            await orderRecord.updateOne(
-              {
-                orderId: newOrder.orderId,
-              },
-              {
-                status: OrderStatus.DELIVERED,
-              },
-            );
-          }, 5000);
+          await sleep(5000);
+          await orderRecord.updateOne(
+            {
+              orderId: newOrder.orderId,
+            },
+            {
+              status: OrderStatus.DELIVERED,
+            },
+          );
         } else {
           await orderRecord.updateOne(
             {

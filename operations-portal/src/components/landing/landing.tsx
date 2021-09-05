@@ -111,7 +111,10 @@ export default function Landing({
 
     // Chk for duplicate orderIds
     const presentOrderIds = currentOrders.map((order) => order?.orderId);
-    if (presentOrderIds.includes(orderForm.orderId)) {
+    if (
+      presentOrderIds.includes(orderForm.orderId) &&
+      orderForm.orderType == "create-order"
+    ) {
       alert(`orderId "${orderForm.orderId}" already present in db`);
       return null;
     }
@@ -123,7 +126,11 @@ export default function Landing({
           `${ServerConfig.getPaymentAppBaseUrl()}/orders/submit-order`,
           orderForm
         )
-        .then((_) => {
+        .then((res) => {
+          console.log(res.data);
+          // Refresh the order table
+          getCurrentOrders();
+          // Update state machine to reflect post-order creation
           toggleSendFormData(`TOGGLE`);
         });
     } catch (err) {
@@ -140,98 +147,108 @@ export default function Landing({
         <h1>Order management system</h1>
       </Container>
       <Container>
-        <div>
-          <h4>Current orders</h4>
-        </div>
-        <div>
-          {_.isEmpty(currentOrders) && (
-            <>
-              <div>No current orders available</div>
-            </>
-          )}
-          {!_.isEmpty(currentOrders) && (
-            <>
-              <table style={{ border: "1px solid black" }}>
-                <thead>
-                  <tr>
-                    <th className="px-2 py-2">orderId</th>
-                    <th className="px-2 py-2">status</th>
-                    <th className="px-2 py-2">description</th>
-                    <th className="px-2 py-2">createdAt</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {currentOrders.map((order, i) => {
-                    return (
-                      <tr key={`order-table-row-${i}`}>
-                        <td className="px-2">{order?.orderId}</td>
-                        <td className="px-2">{order?.status}</td>
-                        <td className="px-2">{order?.description}</td>
-                        <td className="px-2">
-                          {moment(order?.createdAt).format(
-                            "DD/MM/YYYY HH:mm:ss"
-                          )}
-                        </td>
+        <Row>
+          <Col xs={12} md={12} lg={6} xl={6}>
+            <div>
+              <h4>Current orders</h4>
+            </div>
+            <div>
+              {_.isEmpty(currentOrders) && (
+                <>
+                  <div>No current orders available</div>
+                </>
+              )}
+              {!_.isEmpty(currentOrders) && (
+                <>
+                  <table style={{ border: "1px solid black" }}>
+                    <thead>
+                      <tr>
+                        <th className="px-2 py-2">orderId</th>
+                        <th className="px-2 py-2">status</th>
+                        <th className="px-2 py-2">description</th>
+                        <th className="px-2 py-2">createdAt</th>
                       </tr>
-                    );
-                  })}
-                </tbody>
-              </table>
-            </>
-          )}
-        </div>
-      </Container>
-      <Container>
-        <div>
-          <h4>Order input</h4>
-        </div>
-        <div>
-          <form
-            onSubmit={(event) => {
-              createOrder(event);
-            }}
-          >
-            <Row className="my-2">
-              <Col md={2}>Select order type</Col>
-              <Col md={10}>
-                <select
-                  name="orderType"
-                  defaultValue=""
-                  onChange={handleOrderInput}
-                >
-                  <option value="">--Select an option--</option>
-                  <option value="create-order">Create order</option>
-                  <option value="cancel-order">Cancel order</option>
-                </select>
-              </Col>
-            </Row>
-            <Row className="my-2">
-              <Col md={2}>orderId</Col>
-              <Col md={10}>
-                <input
-                  type="text"
-                  name="orderId"
-                  placeholder="mx1234"
-                  onChange={handleOrderInput}
-                />
-              </Col>
-            </Row>
-            <Row className="my-2">
-              <Col md={2}>Description (optional)</Col>
-              <Col md={10}>
-                <input
-                  type="text"
-                  name="orderDescription"
-                  onChange={handleOrderInput}
-                  placeholder="req from customer"
-                />
-              </Col>
-            </Row>
-            <Row className="mx-0">
-              <input type="submit" value="Submit" />
-            </Row>
-          </form>
-        </div>
+                    </thead>
+                    <tbody>
+                      {currentOrders.map((order, i) => {
+                        return (
+                          <tr key={`order-table-row-${i}`}>
+                            <td className="px-2">{order?.orderId}</td>
+                            <td className="px-2">{order?.status}</td>
+                            <td className="px-2">{order?.description}</td>
+                            <td className="px-2">
+                              {moment(order?.createdAt).format(
+                                "DD/MM/YYYY HH:mm:ss"
+                              )}
+                            </td>
+                          </tr>
+                        );
+                      })}
+                    </tbody>
+                  </table>
+                </>
+              )}
+            </div>
+          </Col>
+          <Col xs={12} md={12} lg={6} xl={6}>
+            <div>
+              <h4>Order input</h4>
+            </div>
+            <div>
+              <form
+                onSubmit={(event) => {
+                  createOrder(event);
+                }}
+              >
+                <Row className="my-2">
+                  <Col xs={6} md={6} lg={6} xl={6}>
+                    Select order type
+                  </Col>
+                  <Col xs={6} md={6} lg={6} xl={6}>
+                    <select
+                      name="orderType"
+                      defaultValue=""
+                      onChange={handleOrderInput}
+                    >
+                      <option value="">--Select an option--</option>
+                      <option value="create-order">Create order</option>
+                      <option value="cancel-order">Cancel order</option>
+                    </select>
+                  </Col>
+                </Row>
+                <Row className="my-2">
+                  <Col xs={6} md={6} lg={6} xl={6}>
+                    orderId
+                  </Col>
+                  <Col xs={6} md={6} lg={6} xl={6}>
+                    <input
+                      type="text"
+                      name="orderId"
+                      placeholder="mx1234"
+                      onChange={handleOrderInput}
+                    />
+                  </Col>
+                </Row>
+                <Row className="my-2">
+                  <Col xs={6} md={6} lg={6} xl={6}>
+                    Description (optional)
+                  </Col>
+                  <Col xs={6} md={6} lg={6} xl={6}>
+                    <input
+                      type="text"
+                      name="orderDescription"
+                      onChange={handleOrderInput}
+                      placeholder="req from customer"
+                    />
+                  </Col>
+                </Row>
+                <Row className="mx-0">
+                  <input type="submit" value="Submit" />
+                </Row>
+              </form>
+            </div>
+          </Col>
+        </Row>
       </Container>
       <Container>
         <div>
