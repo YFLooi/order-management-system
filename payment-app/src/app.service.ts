@@ -1,7 +1,5 @@
-import { Injectable, Post, BadRequestException } from '@nestjs/common';
-import { HttpService } from '@nestjs/axios';
-import ServerConfig from '@src/config/server.config';
-import { map, filter } from 'rxjs/operators';
+import { Injectable, BadRequestException } from '@nestjs/common';
+import ServerConfig from './config/server.config';
 import _ from 'lodash';
 import axios from 'axios';
 
@@ -12,7 +10,9 @@ export enum PaymentStatus {
 
 @Injectable()
 export class AppService {
-  constructor(private httpService: HttpService) {}
+  getHello() {
+    return `Hello World!`;
+  }
 
   async processPayment(orderId: string) {
     // Verify order with orderId does exist
@@ -25,7 +25,6 @@ export class AppService {
           },
         )
         .then((res) => {
-          console.log(res);
           return res.data;
         })
         .catch((err) => {

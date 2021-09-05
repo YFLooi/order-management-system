@@ -5,16 +5,12 @@ import orderRecord, {
   PaymentStatus,
 } from '@src/sub-module/order-recording/order-record.model';
 import _ from 'lodash';
-import { HttpService } from '@nestjs/axios';
-import { map, filter } from 'rxjs/operators';
 import ServerConfig from '@src/config/server.config';
 import axios from 'axios';
 import { sleep } from '@src/helper/utils.helper';
 
 @Injectable()
 export class AppService {
-  constructor(private httpService: HttpService) {}
-
   getHello(): string {
     return 'Hello World!';
   }
