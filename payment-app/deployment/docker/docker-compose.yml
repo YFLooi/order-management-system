@@ -1,0 +1,16 @@
+version: "3"
+services:
+  backend:
+    image: orders-app
+    build:
+      context: ../
+      dockerfile: docker/Dockerfile.dev
+      args:
+        port: ${PORT}
+    env_file:
+      - ../.env
+    restart: always
+    ports:
+      - "${PORT}:${PORT}"
+    volumes:
+      - ./order-management-system/logs:/home/node/app/logs

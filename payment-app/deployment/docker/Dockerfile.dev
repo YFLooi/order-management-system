@@ -1,0 +1,22 @@
+FROM node:14.15.3-alpine
+# python, g++ and make needed for bcrypt module
+# openssl required for generating certs for https
+RUN apk add --update python make g++ openssl
+ADD https://github.com/ufoscout/docker-compose-wait/releases/download/2.2.1/wait /wait
+RUN mkdir -p /home/node/app/node_modules && chown -R node:node /home/node/app /wait
+
+# setup node app (copy source, typescript translation)
+WORKDIR /home/node/app
+COPY package*.json yarn.lock ./
+#USER node
+RUN yarn install --pure-lockfile
+#COPY --chown=node:node . .
+COPY . .
+RUN ./node_modules/typescript/bin/tsc
+
+# set ENV variables
+ENV NODE_ENV=dev
+ENV MONGO_ENV=atlas
+
+EXPOSE 3400
+CMD [ "npm", "start" ]
