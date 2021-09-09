@@ -1,6 +1,6 @@
 import { Body, Controller, Get, Post } from '@nestjs/common';
 import { AppService } from './app.service';
-import { OrderData } from '@src/app.type';
+import { OrderData } from './app.type';
 
 @Controller('/orders')
 export class AppController {

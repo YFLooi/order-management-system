@@ -6,6 +6,7 @@ import axios from 'axios';
 export enum PaymentStatus {
   DECLINED = 'declined',
   CONFIRMED = 'confirmed',
+  ERROR = 'error',
 }
 
 @Injectable()
@@ -15,6 +16,8 @@ export class AppService {
   }
 
   async processPayment(orderId: string) {
+    console.log(`orderId received: ${orderId}`);
+
     // Verify order with orderId does exist
     try {
       const orderObj = await axios
@@ -34,9 +37,9 @@ export class AppService {
       // For some reason, lodash's _.isEmpty breaks here...
       if (!orderObj?._id) {
         console.log(
-          `Record for orderId "${orderId}" cannot be found. Terminating`,
+          `Record for orderId cannot be found: "${orderId}". Terminating`,
         );
-        throw new Error(`Record for orderId "${orderId}" cannot be found`);
+        throw new Error(`Record for orderId cannot be found: "${orderId}"`);
       } else {
         console.log(`orderId "${orderId}" verified. Proceeding payment`);
 
@@ -51,9 +54,10 @@ export class AppService {
         }
       }
     } catch (err) {
-      throw new BadRequestException(
-        `Err findng existing order with orderId "${orderId}". Err: ${err?.message}`,
-      );
+      return {
+        paymentStatus: PaymentStatus.ERROR,
+        error: err?.message,
+      };
     }
   }
 }

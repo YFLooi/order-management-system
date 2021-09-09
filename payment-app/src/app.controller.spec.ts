@@ -23,12 +23,31 @@ describe('AppController', () => {
 
     it('should return { paymentStatus: PaymentStatus.CONFIRMED/DECLINED }', async () => {
       const expectedOutput1 = { paymentStatus: PaymentStatus.CONFIRMED };
-      const output1 = await appController.processPayment('testOrder');
-      expect(output1).toEqual(expectedOutput1);
-
       const expectedOutput2 = { paymentStatus: PaymentStatus.DECLINED };
-      const output2 = await appController.processPayment('falseOrder');
-      expect(output2).toEqual(expectedOutput2);
+
+      // testOrder is a valid test order in the db
+      const output = await appController.processPayment({
+        orderId: 'testOrder',
+      });
+      // paymentStatus is randomly confirmed/denied, hence need to account for both
+      try {
+        expect(output).toEqual(expectedOutput1);
+      } catch (err) {
+        if (output?.paymentStatus) {
+          expect(output).toEqual(expectedOutput2);
+        } else {
+          throw err;
+        }
+      }
+    });
+
+    it('should return BadException error', async () => {
+      // falseOrder is a fake order in the db
+      const output = await appController.processPayment({
+        orderId: 'falseOrder',
+      });
+
+      expect(output.paymentStatus).toEqual('error');
     });
   });
 });

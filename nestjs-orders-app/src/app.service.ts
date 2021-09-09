@@ -1,13 +1,13 @@
 import { Injectable, BadRequestException } from '@nestjs/common';
-import { OrderData, OrderType } from '@src/app.type';
+import { OrderData, OrderType } from './app.type';
 import orderRecord, {
   OrderStatus,
   PaymentStatus,
-} from '@src/sub-module/order-recording/order-record.model';
+} from './sub-module/order-recording/order-record.model';
 import _ from 'lodash';
-import ServerConfig from '@src/config/server.config';
+import ServerConfig from './config/server.config';
 import axios from 'axios';
-import { sleep } from '@src/helper/utils.helper';
+import { sleep } from './helper/utils.helper';
 
 @Injectable()
 export class AppService {
@@ -22,7 +22,7 @@ export class AppService {
       return currentOrders;
     } catch (err) {
       throw new BadRequestException(
-        `Err create new order. Err: ${err?.message}`,
+        `Err getting current orders. Err: ${err?.message}`,
       );
     }
   }
