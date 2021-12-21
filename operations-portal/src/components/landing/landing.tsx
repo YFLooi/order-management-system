@@ -25,7 +25,8 @@ export default function Landing({
     orderId: "",
     orderDescription: "",
   });
-  const [sendFormDataState, toggleSendFormData] = useStateMachine({
+
+  const stateMachine = useStateMachine({
     // timesSent = -1 because onLoad, TOGGLE is applied for initial state
     context: { timesSent: 0, timesSuccessfulSend: 0 },
     initial: "waiting",
@@ -63,6 +64,11 @@ export default function Landing({
       },
     },
   });
+  // For some reason, using array destructuring as shown in the docs does not work...
+  // It should be:
+  // const [sendFormDataState, toggleSendFormData] = useStateMachine({...})
+  const sendFormDataState = stateMachine[0];
+  const toggleSendFormData = stateMachine[1];
 
   useEffect(() => {
     getCurrentOrders();
