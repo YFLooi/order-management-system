@@ -1,4 +1,4 @@
-# This file builds a Docker image of bjak-sg-web, then pushes it to Container registry
+# This file builds a Docker image of operations-portal, then pushes it to Container registry
 # Start the build process, then tag the resulting image with the "git commit" hash tag
 # Get git username 
 USER_NAME=$(git config user.name)
