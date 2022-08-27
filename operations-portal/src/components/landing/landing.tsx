@@ -1,6 +1,5 @@
 import { useRouter } from "next/router";
 import { Container, Row, Col } from "react-bootstrap";
-import Link from "next/link";
 import { useState, useEffect } from "react";
 import _ from "lodash";
 import useStateMachine from "@cassiozen/usestatemachine";
@@ -18,7 +17,6 @@ export default function Landing({
   windowWidth: number;
   windowHeight: number;
 }) {
-  const router = useRouter();
   const [currentOrders, setCurrentOrders] = useState(null);
   const [orderForm, setOrderForm] = useState({
     orderType: "",
@@ -64,11 +62,22 @@ export default function Landing({
       },
     },
   });
-  // For some reason, using array destructuring as shown in the docs does not work...
-  // It should be:
-  // const [sendFormDataState, toggleSendFormData] = useStateMachine({...})
-  const sendFormDataState = stateMachine[0];
-  const toggleSendFormData = stateMachine[1];
+
+  const {
+    state,
+    context,
+    event,
+    nextEvents,
+    nextEventsT,
+    send: toggleSendFormData,
+  }: {
+    state;
+    context;
+    event;
+    nextEvents;
+    nextEventsT;
+    send: (arg: string) => void;
+  } = stateMachine;
 
   useEffect(() => {
     getCurrentOrders();
@@ -232,11 +241,10 @@ export default function Landing({
       <Container style={{ minHeight: "15vh" }}>
         <div className="py-3 text-right">
           <div>
-            <b>Send attempts: {sendFormDataState?.context?.timesSent ?? 0}</b>
+            <b>Send attempts: {context?.timesSent ?? 0}</b>
           </div>
           <div>
-            vs completed send attempts:{" "}
-            {sendFormDataState?.context?.timesSuccessfulSend ?? 0}
+            vs completed send attempts: {context?.timesSuccessfulSend ?? 0}
           </div>
         </div>
       </Container>
